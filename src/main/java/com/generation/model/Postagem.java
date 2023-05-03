@@ -1,23 +1,32 @@
 package com.generation.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 public class Postagem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(min = 5, max = 100)
     private String titulo;
 
+    @NotBlank
+    @Size(min = 10, max = 1000)
     private String texto;
 
-    private LocalDateTime data;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date data = new java.sql.Date(System.currentTimeMillis());
+
+    @ManyToOne
+    @JsonIgnoreProperties("postagens")
+    private Tema tema;
 
     public Long getId() {
         return id;
@@ -43,11 +52,19 @@ public class Postagem {
         this.texto = texto;
     }
 
-    public LocalDateTime getData() {
+    public Date getData() {
         return data;
     }
 
-    public void setData(LocalDateTime data) {
+    public void setData(Date data) {
         this.data = data;
+    }
+
+    public Tema getTema() {
+        return tema;
+    }
+
+    public void setTema(Tema tema) {
+        this.tema = tema;
     }
 }
